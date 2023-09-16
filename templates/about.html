@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Us - Garage Sale Organizer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">Garage Sale Organizer</a>
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-white text-center py-5">
+        <h1>About Us</h1>
+        <p class="lead">We are passionate about helping you discover the best garage sales in your area.</p>
+    </header>
+
+    <main class="container mt-5">
+        <section class="about-section">
+            <h2>Our Story</h2>
+            <p style="text-align: justify;">Welcome to Garage Sale Organizer! I am a passionate computer science student, working on my capstone project under the guidance of Dr. Kinsman. This undertaking is a result of my desire to combine technical skills and the love for community engagement while completing the requirements of my master's degree. With Dr. Kinsman's guidance and insights, I embarked on this capstone project with a mission: to create a web-based tool that aims to deliver a reliable, user-friendly and scalable solution for Garage Sale enthusiasts. This project is not just about building a tool. It's about enhancing the local community experience. I believe that garage sales are not just about buying and selling; they are opportunities for making meaningful connections. I am committed to delivering a user-friendly, efficient, and enjoyable platform that helps users find the best garage sales near them and provides organizers with the tools they need to connect with their community.</p>
+        </section>
+
+        <section class="team-section mt-5">
+            <h2>Our Team</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="/images/1642479650485.jpeg" class="card-img-top" alt="Student">
+                        <div class="card-body">
+                            <h6 class="card-title">Kushal S. Kale</h6>
+                            <p class="card-text">Student</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="/images/getphotoid.jpeg" class="card-img-top" alt="Capstone Advisor">
+                        <div class="card-body">
+                            <h6 class="card-title">Dr. Thomas Kinsman</h6>
+                            <p class="card-text">Capstone Advisor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <form method="POST" action="/subscribe">
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
