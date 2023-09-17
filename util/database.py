@@ -47,17 +47,14 @@ def insert_documents(db, collection, data):
 
 
 def main():
-    mydb = inti_database()
-
-    mashups_collection = "mashups"
-    insert_document(mydb, mashups_collection, {})
+    pass
 
 
 if __name__ == '__main__':
     main()
 
 
-def get_documents(mydb, collection_name, updated_year, category, rating, rating_comparison, tags, protocols, apis):
+def get_documents(mydb, collection_name=None, updated_year=None, category=None, rating=None, rating_comparison=None, tags=None, protocols=None, apis=None):
     """
     Get the documents from the database
     :param apis: apis

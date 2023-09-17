@@ -12,8 +12,8 @@
   <script>
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 35.035244, lng: -80.85564},
-            zoom: 14
+            center: {lat: 35.224504610, lng: -80.84564},
+            zoom: 10
         });
         var pin;
         google.maps.event.addListener(map, 'click', function(event) {
@@ -24,7 +24,7 @@
                 position: event.latLng,
                 map: map
             });
-            document.getElementById('address').value = event.latLng;
+            document.getElementById('location').value = event.latLng;
         });
     }
   </script>
@@ -32,48 +32,44 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="#">Garage Sale Organizer</a>
-<!--      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--      </button>-->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="contact">Contact</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+        <div class="container">
+            <div class="col-md-9">
+                <a class="navbar-brand" href="/">Garage Sale Organizer</a>
+            </div>
+            <div class="collapse navbar-collapse col-md-3" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
   </nav>
 
   <header class="bg-primary text-white text-center py-5">
     <h1>Discover Hidden Treasures Near You!</h1>
     <p class="lead">Find the best garage sales in your area and score great deals.</p>
-    <form method="GET" action="/search" class="mb-3">
+    <form method="GET" action='/search' mb-3>
       <div class="input-group">
-        <input type="text" name="location" class="form-control" placeholder="Enter your location or ZIP code" required>
+        <input type="text" name="location" class="form-control" placeholder="Enter ZIP code" required pattern="[0-9]{5}">
         <button type="submit" class="btn btn-warning">Find Sales Near Me</button>
       </div>
     </form>
+    <p style="margin-top: 40px; margin-bottom: 0px;">Or, Select a location on the map below</p>
   </header>
 
-   <div class="container">
+   <div class="container" style="margin-top: 5px;">
         <div class="row">
-        <h1>Find Breweries Near a Location</h1>
-            <form action="/search" method="post">
+            <form action="/search" method="get">
                 <div class="form-group">
                     <div id="map" style="height:400px;width:100%"></div>
-                    <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" name="address">
+                    <label for="location">Location:</label>
+                    <input type="text" class="form-control" id="location" name="location">
                 </div>
-                <button type="submit" class="btn btn-default">Get Breweries</button>
+                <button style="margin-top: 10px;" type="submit" class="btn btn-warning">Find Sales Near Me</button>
             </form>
         </div>
    </div>
@@ -88,27 +84,26 @@
   </main>
 
   <footer class="bg-light mt-5 py-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h3>Subscribe to Our Newsletter</h3>
-          <form method="POST" action="/subscribe">
-            <div class="input-group mb-3">
-              <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-              <button type="submit" class="btn btn-primary">Subscribe</button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <form method="POST" action="/subscribe">
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                    </ul>
+                </div>
             </div>
-          </form>
         </div>
-        <div class="col-md-6">
-          <ul class="list-unstyled">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Terms of Service</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 </body>
 </html>
