@@ -37,12 +37,13 @@
                     <div class="card mb-4">
                         <img src="images/img.jpg" class="card-img-top" alt="{{ sale.name }}">
                         <div class="card-body">
-                            <h6 class="card-title">{{ sale.name }}</h6>
-                            <p class="card-text">Date: {{ sale.date }}</p>
-                            <p class="card-text">Location: {{ sale.location["coordinates"] }}</p>
+                            <h5 class="card-title text-dark">{{ sale.name }}</h5>
+                            <p class="card-text text-secondary">Date: {{ sale.date }}</p>
+                            <p class="card-text text-secondary">Location: {{ sale.location["coordinates"] }}</p>
+                            <p class="card-text text-secondary">ID: {{ sale._id }}</p>
                         </div>
-                        <div class="card-footer">
-                            <a href="/kushal" class="btn btn-primary btn-sm">View Details</a>
+                        <div class="card-footer ">
+                            <a href="{{ url_for('event', event_id=sale._id) }}" class="btn btn-primary btn-block">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -64,7 +65,7 @@
                     </form>
                 </div>
                 <div class="col-md-6">
-                    <ul class="list-unstyled">
+                    <ul class="list">
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About Us</a></li>
                         <li><a href="/faq">FAQ</a></li>

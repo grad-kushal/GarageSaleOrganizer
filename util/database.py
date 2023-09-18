@@ -1,6 +1,7 @@
 import re
 
 import pymongo
+from bson import ObjectId
 
 
 def delete_collection(db, collection):
@@ -52,6 +53,20 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def get_document_by_id(mydb, collection_name, document_id):
+    """
+    Get the document by id
+    :param mydb: database object
+    :param collection_name: collection name
+    :param document_id: document id
+    :return: the document
+    """
+    collection = mydb[collection_name]
+    document = collection.find_one({'_id': ObjectId(document_id)})
+    # print("Document: ", document)
+    return document
 
 
 def get_documents(mydb, collection_name=None, updated_year=None, category=None, rating=None, rating_comparison=None, tags=None, protocols=None, apis=None):
@@ -162,3 +177,34 @@ def close_database(mydb):
     :return: None
     """
     mydb.client.close()
+
+
+def get_documents_by_location(mydb, collection_name, lat, lng, radius):
+    """
+    Get the documents from the database by location
+    :param mydb: database object
+    :param collection_name: collection name
+    :param lat: latitude
+    :param lng: longitude
+    :param radius: radius
+    :return: the documents near the location
+    """
+    print("Query parameters: ", collection_name, lat, lng, radius)
+    pipeline = [
+        {
+            '$geoNear': {
+                'near': {
+                    'type': 'Point',
+                    'coordinates': [lat, lng]
+                },
+                'distanceField': 'distance',
+                'maxDistance': radius,
+                'spherical': True
+            }
+        }
+    ]
+    # Get the documents
+    documents = execute_aggregation(mydb, collection_name, pipeline)
+    # Return the documents
+    return documents
+

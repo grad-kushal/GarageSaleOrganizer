@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Sale Search Results - Garage Sale Organizer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSgw5nZEK3PiL6tHbI761u3e4ATKVWVI4&libraries=places"></script>-->
+<!--    <script>-->
+<!--  // Function to initialize the map-->
+<!--  function initMap() {-->
+<!--    const eventLocation = { lat: event.location.coordinates[1], lng: event.location.coordinates[0] };-->
+<!--    const map = new google.maps.Map(document.getElementById('map'), {-->
+<!--      center: eventLocation,-->
+<!--      zoom: 15 // Adjust the zoom level as needed-->
+<!--    });-->
+
+<!--    // Create a marker for the event location-->
+<!--    new google.maps.Marker({-->
+<!--      position: eventLocation,-->
+<!--      map: map,-->
+<!--      title: 'Event Location'-->
+<!--    });-->
+
+<!--    // Get user's current location (if allowed by the user)-->
+<!--    if (navigator.geolocation) {-->
+<!--      navigator.geolocation.getCurrentPosition((position) => {-->
+<!--        const userLocation = {-->
+<!--          lat: position.coords.latitude,-->
+<!--          lng: position.coords.longitude-->
+<!--        };-->
+
+<!--        // Create a DirectionsService object to calculate directions-->
+<!--        const directionsService = new google.maps.DirectionsService();-->
+
+<!--        // Create a DirectionsRenderer object to display directions-->
+<!--        const directionsRenderer = new google.maps.DirectionsRenderer({-->
+<!--          map: map-->
+<!--        });-->
+
+<!--        // Set the origin (user's location) and destination (event location)-->
+<!--        const request = {-->
+<!--          origin: userLocation,-->
+<!--          destination: eventLocation,-->
+<!--          travelMode: google.maps.TravelMode.DRIVING-->
+<!--        };-->
+
+<!--        // Calculate and display the directions-->
+<!--        directionsService.route(request, (result, status) => {-->
+<!--          if (status === google.maps.DirectionsStatus.OK) {-->
+<!--            directionsRenderer.setDirections(result);-->
+<!--          } else {-->
+<!--            console.error('Error calculating directions:', status);-->
+<!--          }-->
+<!--        });-->
+<!--      });-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Attach a click event listener to the "Get Directions" button-->
+<!--  document.getElementById('getDirections').addEventListener('click', () => {-->
+<!--    // Call the initMap function to display directions-->
+<!--    initMap();-->
+<!--  });-->
+<!--</script>-->
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">Garage Sale Organizer</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-white text-center py-5">
+        <h1>{{ event.name }}</h1>
+        <p class="lead">
+            {% for category in event.categories %}
+                <span class="badge bg-info">{{ category }}</span>
+            {% endfor %}
+        </p>
+    </header>
+
+     <main class="container mt-5">
+         <section class="event-details-section">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="/images/img.jpg" class="img-fluid" alt="Event">
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">ID: {{ event._id }}</h5>
+                            <p class="card-text text-dark">{{ event.description }}</p>
+                            <p class="card-text text-dark">Location: {{ event.location["coordinates"] }}</p>
+                            <p class="card-text text-dark">{{ day_of_week }} -------------- {{ date }} -------------- {{ time }}</p>
+                        </div>
+                        <div class="card-footer" id="map">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.location.coordinates[0] }},{{ event.location.coordinates[1] }}" target="_blank" class="btn btn-primary btn-block">Get Directions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </section>
+     </main>
+
+
+     <footer class="bg-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <form method="POST" action="/subscribe">
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
