@@ -5,77 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garage Sale Search Results - Garage Sale Organizer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSgw5nZEK3PiL6tHbI761u3e4ATKVWVI4&libraries=places"></script>-->
-<!--    <script>-->
-<!--  // Function to initialize the map-->
-<!--  function initMap() {-->
-<!--    const eventLocation = { lat: event.location.coordinates[1], lng: event.location.coordinates[0] };-->
-<!--    const map = new google.maps.Map(document.getElementById('map'), {-->
-<!--      center: eventLocation,-->
-<!--      zoom: 15 // Adjust the zoom level as needed-->
-<!--    });-->
-
-<!--    // Create a marker for the event location-->
-<!--    new google.maps.Marker({-->
-<!--      position: eventLocation,-->
-<!--      map: map,-->
-<!--      title: 'Event Location'-->
-<!--    });-->
-
-<!--    // Get user's current location (if allowed by the user)-->
-<!--    if (navigator.geolocation) {-->
-<!--      navigator.geolocation.getCurrentPosition((position) => {-->
-<!--        const userLocation = {-->
-<!--          lat: position.coords.latitude,-->
-<!--          lng: position.coords.longitude-->
-<!--        };-->
-
-<!--        // Create a DirectionsService object to calculate directions-->
-<!--        const directionsService = new google.maps.DirectionsService();-->
-
-<!--        // Create a DirectionsRenderer object to display directions-->
-<!--        const directionsRenderer = new google.maps.DirectionsRenderer({-->
-<!--          map: map-->
-<!--        });-->
-
-<!--        // Set the origin (user's location) and destination (event location)-->
-<!--        const request = {-->
-<!--          origin: userLocation,-->
-<!--          destination: eventLocation,-->
-<!--          travelMode: google.maps.TravelMode.DRIVING-->
-<!--        };-->
-
-<!--        // Calculate and display the directions-->
-<!--        directionsService.route(request, (result, status) => {-->
-<!--          if (status === google.maps.DirectionsStatus.OK) {-->
-<!--            directionsRenderer.setDirections(result);-->
-<!--          } else {-->
-<!--            console.error('Error calculating directions:', status);-->
-<!--          }-->
-<!--        });-->
-<!--      });-->
-<!--    }-->
-<!--  }-->
-
-<!--  // Attach a click event listener to the "Get Directions" button-->
-<!--  document.getElementById('getDirections').addEventListener('click', () => {-->
-<!--    // Call the initMap function to display directions-->
-<!--    initMap();-->
-<!--  });-->
-<!--</script>-->
-
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">Garage Sale Organizer</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Garage Sale Organizer</a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About Us</a>
+                        <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-warning btn-block" href="{{ url_for('create') }}"> Host a Sale!</a>
                     </li>
                 </ul>
             </div>
@@ -129,9 +73,9 @@
                 </div>
                 <div class="col-md-6">
                     <ul class="list-unstyled">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('create') }}">Create Sale!</a></li>
                     </ul>
                 </div>
             </div>

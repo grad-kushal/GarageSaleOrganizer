@@ -10,14 +10,17 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">Garage Sale Organizer</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Garage Sale Organizer</a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About Us</a>
+                        <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-warning btn-block" href="{{ url_for('create') }}"> Host a Sale!</a>
                     </li>
                 </ul>
             </div>
@@ -84,9 +87,9 @@
                 </div>
                 <div class="col-md-6">
                     <ul class="list">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('create') }}">Create Sale!</a></li>
                     </ul>
                 </div>
             </div>

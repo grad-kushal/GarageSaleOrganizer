@@ -1,11 +1,14 @@
+import os
+
 from flask import Flask, render_template, request
 
 from util import database
 
-app = Flask(__name__, static_url_path='/images', static_folder='images')
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 
 mydb = database.connect()
 
+maps_api_key = os.environ.get('GOOGLE_API_KEY')
 
 @app.route('/')
 def index():
@@ -13,7 +16,7 @@ def index():
     Render the index page
     :return:
     """
-    return render_template('landing.html')
+    return render_template('landing.html', maps_api_key=maps_api_key)
 
 
 @app.route('/about')
@@ -112,6 +115,15 @@ def event(event_id):
     print(date, time, day_of_week)
 
     return render_template('event.html', event=event, date=date, time=time, day_of_week=day_of_week)
+
+
+@app.route('/create')
+def create():
+    """
+    Render the create page
+    :return:
+    """
+    return render_template('create.html')
 
 
 @app.errorhandler(404)
