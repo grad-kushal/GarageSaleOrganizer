@@ -208,3 +208,16 @@ def get_documents_by_location(mydb, collection_name, lat, lng, radius):
     # Return the documents
     return documents
 
+
+def get_user_by_username(mydb, username):
+    """
+    Get the user by username
+    :param mydb: database object
+    :param username: username
+    :return: the user
+    """
+    collection = mydb['users']
+    query = {'username': username}
+    user = collection.find_one(query)
+    return user
+

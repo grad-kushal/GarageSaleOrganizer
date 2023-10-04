@@ -1,14 +1,22 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
 
+from models import User
 from util import database
 
-app = Flask(__name__, static_url_path='/static', static_folder='static')
+app = Flask(__name__, static_url_path='/images', static_folder='images')
+lm = LoginManager(app)
+bcrypt = Bcrypt(app)
+
+lm.login_view = 'login'
 
 mydb = database.connect()
 
 maps_api_key = os.environ.get('GOOGLE_API_KEY')
+
 
 @app.route('/')
 def index():
@@ -57,7 +65,7 @@ def search():
 
 def get_human_readable_date(date):
     """
-    Get the human readable date
+    Get the human-readable date
     :param date: date string
     :return: the human readable date
     """
@@ -94,6 +102,7 @@ def get_human_readable_date(date):
 
 
 @app.route('/event/<event_id>')
+@lm.login_required
 def event(event_id):
     """
     Render the event page
@@ -124,6 +133,90 @@ def create():
     :return:
     """
     return render_template('create.html')
+
+
+@lm.user_loader
+def load_user(user_id):
+    """
+    Load the user
+    :param user_id: user id
+    :return: the user
+    """
+    user = database.get_document_by_id(mydb, "Users", user_id)
+    if user:
+        return User(user_id=user['_id'], username=user['username'], password=user['password'], email=user['email'],
+                    first_name=user['first_name'], last_name=user['last_name'], address=user['address'],
+                    phone_number=user['phone_number'])
+    else:
+        return None
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Get the form data
+        username = request.form['username']
+        password = request.form['password']
+        # Get the user from the database
+        user = database.get_user_by_username(mydb, username)
+        if user:
+            # Check the password
+            if bcrypt.check_password_hash(user['password'], password):
+                # Create the user object
+                user = User(user_id=user['_id'], username=user['username'], password=user['password'],
+                            email=user['email'], first_name=user['first_name'], last_name=user['last_name'],
+                            address=user['address'], phone_number=user['phone_number'])
+                # Login the user
+                lm.login_user(user)
+                flash("Logged in successfully.", "success")
+                return render_template('landing.html', maps_api_key=maps_api_key)
+            else:
+                flash("Invalid username or password.", "danger")
+                return render_template('login.html', error=True)
+
+        else:
+            return render_template('login.html', error=True)
+
+
+@app.route('/logout')
+def logout():
+    """
+    Logout the user
+    :return:
+    """
+    lm.logout_user()
+    flash("Logged out successfully.", "success")
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+    Register the user
+    :return:
+    """
+    if request.method == 'POST':
+        # Get the form data
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        address = request.form['address']
+        phone_number = request.form['phone_number']
+        user = database.get_user_by_username(mydb, username)
+        if user:
+            flash("User already exists.", "danger")
+            return render_template('login.html', error=True)
+        else:
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            new_user = User(user_id=None, username=username, password=hashed_password, email=email,
+                            first_name=first_name, last_name=last_name, address=address, phone_number=phone_number)
+            database.insert_document(mydb, "Users", new_user.__dict__)
+            flash("Registered successfully.", "success")
+            return render_template('login.html')
+    else:
+        return render_template('register.html')
 
 
 @app.errorhandler(404)
