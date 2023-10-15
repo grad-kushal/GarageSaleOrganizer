@@ -1,6 +1,9 @@
-DEBUG = True
-SECRET_KEY = 'your-secret-key'  # Replace with a secure secret key
+import util.secret_key
 
-# MongoDB configuration
-MONGODB_HOST = 'mongodb://localhost:27017/'  # Replace with your MongoDB connection string
-DATABASE_NAME = 'GarageSaleOrganizer'  # Replace with your preferred database name
+DEBUG = True
+SECRET_KEY = util.secret_key.generate_secret_key(32)
+
+MONGODB_HOST = 'mongodb://localhost:27017/'
+DATABASE_NAME = 'GarageSaleOrganizer'
+
+

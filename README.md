@@ -50,7 +50,6 @@ The Garage Sale Organizer project aims to simplify the process of finding and at
 3. Configure your MongoDB connection in `config.py`.
 4. Run the Flask app: `python app.py`
 5. Access the app in your browser: `http://localhost:5000`
-qq
 ---
 
 Enjoy discovering and organizing garage sales with the Garage Sale Organizer!

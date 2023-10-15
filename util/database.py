@@ -216,7 +216,7 @@ def get_user_by_username(mydb, username):
     :param username: username
     :return: the user
     """
-    collection = mydb['users']
+    collection = mydb['Users']
     query = {'username': username}
     user = collection.find_one(query)
     return user

@@ -1,14 +1,18 @@
 import os
 
-from flask import Flask, render_template, request, flash
-from flask_login import LoginManager
+from flask import Flask, render_template, request, flash, url_for, redirect
+import flask_login
 from flask_bcrypt import Bcrypt
 
+from config import config
 from models import User
 from util import database
 
 app = Flask(__name__, static_url_path='/images', static_folder='images')
-lm = LoginManager(app)
+
+lm = flask_login.LoginManager(app)
+lm.init_app(app)
+
 bcrypt = Bcrypt(app)
 
 lm.login_view = 'login'
@@ -17,8 +21,14 @@ mydb = database.connect()
 
 maps_api_key = os.environ.get('GOOGLE_API_KEY')
 
+app.config['SECRET_KEY'] = config.SECRET_KEY
+
+# flask.Config['FLASK_LOGIN_USE_URL_ENCODE'] = False
+# flask.Config['FLASK_LOGIN_USE_URL_DECODE'] = False
+
 
 @app.route('/')
+@flask_login.login_required
 def index():
     """
     Render the index page
@@ -37,6 +47,7 @@ def about():
 
 
 @app.route('/search')
+@flask_login.login_required
 def search():
     """
     Render the search page
@@ -53,7 +64,7 @@ def search():
         lng = float(loc[1].strip())
         print(lat, lng)
 
-    # Get the events from the database using geo-spatial queries
+    # Get the events from the database using geospatial queries
     events = database.get_documents_by_location(mydb, "Events", lat, lng, 50000)
     # sales = database.get_documents(mydb, "Events")
     events = list(events)
@@ -102,7 +113,7 @@ def get_human_readable_date(date):
 
 
 @app.route('/event/<event_id>')
-@lm.login_required
+@flask_login.login_required
 def event(event_id):
     """
     Render the event page
@@ -153,29 +164,41 @@ def load_user(user_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    r = request
+    print("3", request)
+
     if request.method == 'POST':
-        # Get the form data
         username = request.form['username']
         password = request.form['password']
-        # Get the user from the database
+        next_page = request.form['next']
+
         user = database.get_user_by_username(mydb, username)
+
         if user:
-            # Check the password
             if bcrypt.check_password_hash(user['password'], password):
-                # Create the user object
                 user = User(user_id=user['_id'], username=user['username'], password=user['password'],
                             email=user['email'], first_name=user['first_name'], last_name=user['last_name'],
-                            address=user['address'], phone_number=user['phone_number'])
-                # Login the user
-                lm.login_user(user)
+                            address=user['address'], phone_number=user['phone_number'], is_active=True)
+                user.set_authenticated(True)
+                print(str(user))
+                flask_login.login_user(user)
                 flash("Logged in successfully.", "success")
-                return render_template('landing.html', maps_api_key=maps_api_key)
+                print(next_page)
+                if next_page:
+                    return redirect(next_page)
+                else:
+                    return redirect(url_for('index'))
             else:
                 flash("Invalid username or password.", "danger")
                 return render_template('login.html', error=True)
 
         else:
+            flash("User does not exist.", "danger")
             return render_template('login.html', error=True)
+    else:
+        next_page = request.args.get('next')
+        print("next", next_page)
+        return render_template('login.html', error=False, next=next_page)
 
 
 @app.route('/logout')
@@ -209,8 +232,8 @@ def register():
             flash("User already exists.", "danger")
             return render_template('login.html', error=True)
         else:
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            new_user = User(user_id=None, username=username, password=hashed_password, email=email,
+            hashed_password = bcrypt.generate_password_hash(password)
+            new_user = User(username=username, password=hashed_password, email=email,
                             first_name=first_name, last_name=last_name, address=address, phone_number=phone_number)
             database.insert_document(mydb, "Users", new_user.__dict__)
             flash("Registered successfully.", "success")
