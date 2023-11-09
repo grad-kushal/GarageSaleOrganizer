@@ -20,7 +20,13 @@
                         <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile') }}">My Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link btn btn-warning btn-block" href="{{ url_for('create') }}"> Host a Sale!</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{ url_for('logout', next=request.endpoint) }}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -31,6 +37,16 @@
         <h1>About Us</h1>
         <p class="lead">We are passionate about helping you discover the best garage sales in your area.</p>
     </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
     <main class="container mt-5">
         <section class="about-section">

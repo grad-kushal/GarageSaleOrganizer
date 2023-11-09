@@ -19,7 +19,13 @@
                         <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile') }}">My Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link btn btn-warning btn-block" href="{{ url_for('create') }}"> Host a Sale!</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -35,11 +41,21 @@
         </p>
     </header>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
      <main class="container mt-5">
          <section class="event-details-section">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="/images/img.jpg" class="img-fluid" alt="Event">
+                    <img src="data:{{ image_mimetype }};base64,{{ image_data }}" class="img-fluid" alt="{{ event.name }}">
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-4">
@@ -50,7 +66,7 @@
                             <p class="card-text text-dark">{{ day_of_week }} -------------- {{ date }} -------------- {{ time }}</p>
                         </div>
                         <div class="card-footer" id="map">
-                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.location.coordinates[0] }},{{ event.location.coordinates[1] }}" target="_blank" class="btn btn-primary btn-block">Get Directions</a>
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ event.location.coordinates[1] }},{{ event.location.coordinates[0] }}" target="_blank" class="btn btn-primary btn-block">Get Directions</a>
                         </div>
                     </div>
                 </div>

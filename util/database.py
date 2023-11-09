@@ -186,7 +186,7 @@ def get_documents_by_location(mydb, collection_name, lat, lng, radius):
     :param collection_name: collection name
     :param lat: latitude
     :param lng: longitude
-    :param radius: radius
+    :param radius: radius in meters
     :return: the documents near the location
     """
     print("Query parameters: ", collection_name, lat, lng, radius)
@@ -221,3 +221,34 @@ def get_user_by_username(mydb, username):
     user = collection.find_one(query)
     return user
 
+
+def get_event_by_name(mydb, name):
+    """
+    Get the event by name
+    :param mydb: database object
+    :param name: name
+    :return: the event
+    """
+    collection = mydb['Events']
+    query = {'name': name}
+    event = collection.find_one(query)
+    return event
+
+
+def add_event_to_user(mydb, user_id, insert_id, event_name):
+    """
+    Add the event to the user's events list
+    :param event_name:
+    :param mydb: database object
+    :param user_id: user id
+    :param insert_id: event id
+    :return: the result of the update operation
+    """
+    collection = mydb['Users']
+    query = {'_id': ObjectId(user_id)}
+    # Create an event object to insert in the user's events list
+    event = {'_id': insert_id, 'name': event_name}
+    # Create the update query
+    update = {'$push': {'events': event}}
+    result = collection.update_one(query, update)
+    return result
