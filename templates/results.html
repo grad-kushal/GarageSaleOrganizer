@@ -50,26 +50,89 @@
     <main class="container mt-5">
         <section class="results-section">
             <h4 class="mb-4 text-secondary">Found {{ number_of_sales }} results..</h4>
-            <div class="row">
-                {% for sale, event_image in combined %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <img src="data:{{ sale.image_mimetype }};base64,{{ event_image }}" class="card-img-top" alt="{{ sale.name }}">
-                        <div class="card-body">
-                            <h5 class="card-title text-dark">{{ sale.name }}</h5>
-                            <p class="card-text text-secondary">Date: {{ sale.date }}</p>
-                            <p class="card-text text-secondary">Location: {{ sale.location["coordinates"] }}</p>
-                            <p class="card-text text-secondary">ID: {{ sale._id }}</p>
-                        </div>
-                        <div class="card-footer ">
-                            <a href="{{ url_for('event', event_id=sale._id) }}" class="btn btn-primary btn-block">View Details</a>
+            <form method="POST" action="{{ url_for('itinerary') }}">
+                <div class="row">
+                    {% for sale, event_image in combined %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img src="data:{{ sale.image_mimetype }};base64,{{ event_image }}" class="card-img-top" alt="{{ sale.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title text-dark">{{ sale.name }}</h5>
+                                <p class="card-text text-secondary">Date: {{ sale.date }}</p>
+                                <p class="card-text text-secondary">Location: {{ sale.location["coordinates"] }}</p>
+                                <p class="card-text text-secondary">ID: {{ sale._id }}</p>
+                                <input type="checkbox" class="event-checkbox" name="selected_events" value="{{ sale._id }}" id="event-{{ sale._id }}">
+                            </div>
+                            <div class="card-footer ">
+                                <a href="{{ url_for('event', event_id=sale._id) }}" class="btn btn-primary btn-block">View Details</a>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
+                <input type="hidden" name="user_location" id="user_location" value="{{ user_location }}">
+                <button id="submit-events" class="btn btn-primary btn-block" type="submit" disabled>Get Route Plans</button>
+            </form>
         </section>
     </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedEvents = [];
+
+        // Listen for changes in checkboxes
+        const checkboxes = document.querySelectorAll(".event-checkbox");
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+                const eventId = checkbox.id.replace("event-","");
+                if (checkbox.checked) {
+                    // Event selected
+                    selectedEvents.push(eventId);
+                } else {
+                    // Event deselected
+                    const index = selectedEvents.indexOf(eventId);
+                    if (index !== -1) {
+                        selectedEvents.splice(index, 1);
+                    }
+                }
+
+                // Update the submit button's disabled property
+                const submitButton = document.getElementById("submit-events");
+                submitButton.disabled = selectedEvents.length === 0;
+
+                // You can now use the selectedEvents array to track the selected events
+                console.log("Selected Events:", selectedEvents);
+            });
+        });
+
+<!--        // Add a click event listener to the submit button-->
+<!--        const submitButton = document.getElementById("submit-events");-->
+<!--        submitButton.addEventListener("click", function () {-->
+<!--            // Send the selected events to your Flask route for further processing-->
+<!--            if (selectedEvents.length > 0) {-->
+<!--                const formData = new FormData();-->
+<!--                formData.append("selected_events", selectedEvents);-->
+
+<!--                // You can use the fetch API to send the data to your Flask route-->
+<!--                fetch("/itinerary", {-->
+<!--                    method: "POST",-->
+<!--                    body: formData,-->
+<!--                })-->
+<!--                    .then(response => {-->
+<!--                        if (response.ok) {-->
+<!--                            window.location.href = "/itinerary";-->
+<!--                        } else {-->
+<!--                            throw new Error("Something went wrong");-->
+<!--                        }-->
+<!--                    })-->
+<!--                    .catch(error => {-->
+<!--                        console.error("Error:", error);-->
+<!--                    });-->
+<!--            }-->
+<!--        });-->
+    });
+    </script>
+
 
     <footer class="bg-light mt-5 py-4">
         <div class="container">

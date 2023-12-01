@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In - Garage Sale Organizer</title>
+    <title>Route Plan - Garage Sale Organizer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -25,14 +24,16 @@
                     <li class="nav-item">
                         <a class="nav-link btn btn-warning btn-block" href="{{ url_for('create') }}"> Host a Sale!</a>
                     </li>
+                    <li>
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="bg-primary text-white text-center py-5">
-        <h1>Log In</h1>
-        <p class="lead">Welcome back! Please sign in to your account.</p>
+        <h1>Route Plans</h1>
     </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -46,35 +47,51 @@
     {% endwith %}
 
     <main class="container mt-5">
-    <section class="login-section">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
+    <section class="route-details-section">
+        {% if dist_preferred_routes %}
+            {% for route in dist_preferred_routes %}
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ url_for('login') }}">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" name="username" class="form-control" id="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" id="password" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="hidden" name="next" value="{{ next }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
-                            <button type="button" class="btn btn-secondary btn-block" onclick="location.href='{{ url_for('register') }}'">Register</button>
-                        </form>
-                    </div>
+                    <h5 class="card-title">Suggested Route Option 1</h5>
+                    <ol class="list-group">
+                        {% for event in route %}
+                                <li class="list-group-item">{{ event[0] }}</li>
+                        {% endfor %}
+                        <li class="list-group-item">
+                            <a href="https://www.google.com/maps/dir/{% for event_name, coordinates in route %}{{ coordinates[1] }},{{ coordinates[0] }}/{% endfor %}" target="_blank" class="btn btn-primary btn-block">
+                                Navigate Route
+                            </a>
+                        </li>
+                    </ol>
                 </div>
-            </div>
-        </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if dur_preferred_routes %}
+            {% for route in dur_preferred_routes %}
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">Suggested Route Option 2</h5>
+                    <ol class="list-group">
+                        {% for event in route %}
+                                <li class="list-group-item">{{ event[0] }}</li>
+                        {% endfor %}
+                        <li class="list-group-item">
+                            <a href="https://www.google.com/maps/dir/{% for event_name, coordinates in route %}{{ coordinates[1] }},{{ coordinates[0] }}/{% endfor %}" target="_blank" class="btn btn-primary btn-block">
+                                Navigate Route
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </section>
     </main>
 
 
-    <footer class="bg-light mt-5 py-4">
+     <footer class="bg-light mt-5 py-4">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -87,7 +104,7 @@
                     </form>
                 </div>
                 <div class="col-md-6">
-                    <ul class="list">
+                    <ul class="list-unstyled">
                         <li><a href="{{ url_for('index') }}">Home</a></li>
                         <li><a href="{{ url_for('about') }}">About Us</a></li>
                         <li><a href="{{ url_for('create') }}">Create Sale!</a></li>
@@ -97,6 +114,6 @@
         </div>
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

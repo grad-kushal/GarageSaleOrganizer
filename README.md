@@ -34,7 +34,7 @@ The Garage Sale Organizer project aims to simplify the process of finding and at
 
 ### Create Event (Upcoming)
 - URL: `/create_event`
-- Description: In the future, users will be able to create and manage their garage sale events. This page will allow event organizers to provide event details and images.
+- Description: Users will be able to create and manage their garage sale events. This page will allow event organizers to provide event details and images.
 
 ## Technologies Used
 

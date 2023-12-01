@@ -90,6 +90,47 @@ def use_dummy_image():
     return bson.Binary(image_data)
 
 
+def create_dummyevents_for_demouser(mydb, faker):
+    """
+    Create dummy events for the demouser
+    :param mydb: database object
+    :param faker: faker object
+    :return: None
+    """
+    collection = mydb["Events"]
+    collection.delete_many({})
+    collection = mydb["Users"]
+    collection.delete_many({})
+    # Create 50 events for the demouser
+    for i in range(50):
+        lat = 37.871853
+        lng = -122.258423
+        event = {
+            "name": "demouser's event " + str(i + 1),
+            "description": faker.text(),
+            "organizer": "demouser",
+            "date": faker.date_time_this_year(after_now=True, before_now=False),
+            "location": {
+                "type": "Point",
+                "coordinates": [float(lng), float(lat)]
+            },
+            "created_at": datetime.datetime.now(),
+            "updated_at": datetime.datetime.now(),
+            "phone_number": "123456789",
+            "categories": [faker.word() for i in range(3)],
+            "image": use_dummy_image(),
+            "image_mimetype": "image/jpeg"
+        }
+        collection = mydb["Events"]
+        collection.insert_one(event)
+        # Add the event to the list of user's events in the database
+        user = mydb["Users"].find_one({"username": "demouser"})
+        if "events" not in user:
+            user["events"] = []
+        user["events"].append(event["name"])
+        mydb["Users"].update_one({"username": "demouser"}, {"$set": user})
+
+
 def main():
     """
     Main function
@@ -100,25 +141,25 @@ def main():
 
     locations = []
 
-    # with open('US.txt', 'r') as file:
-    #     lines = file.readlines()
-    # for line in lines[21269:]:
-    #     fields = line.split('\t')
-    #
-    #     if len(fields) >= 11:
-    #         lat = fields[9]
-    #         lng = fields[10]
-    #
-    #         locations.append((lat, lng))
-    #
-    # users = generate_dummy_users(faker, len(locations), locations)
-    # collection = mydb["Users"]
-    # collection.delete_many({})
-    # collection.insert_many(users)
+    # create_dummyevents_for_demouser(mydb, faker)
 
-    # Delete all events from the Events collection
-    mydb["Events"].delete_many({})
+    with open('US.txt', 'r') as file:
+        lines = file.readlines()
+    for line in lines:
+        fields = line.split('\t')
 
+        if len(fields) >= 11:
+            lat = fields[9]
+            lng = fields[10]
+
+            locations.append((lat, lng))
+
+    users = generate_dummy_users(faker, len(locations), locations)
+    collection = mydb["Users"]
+    collection.delete_many({})
+    collection.insert_many(users)
+
+    #
     # Get all users from the database
     users = list(mydb["Users"].find({}))
 
@@ -134,25 +175,6 @@ def main():
     events = list(mydb["Events"].find({}))
     # Print the number of events
     print(len(events))
-
-    # # Add the events to the users
-    # for event in events:
-    #     organizer = event["organizer"]
-    #     for user in users:
-    #         if user["username"] == organizer:
-    #             if "events" not in user:
-    #                 user["events"] = []
-    #             user["events"].append(event["name"])
-    #             break
-
-    # # Add image_mimetype field to each event
-    # for event in events:
-    #     event["image_mimetype"] = "image/jpeg"
-    #
-    # # Update the events in the database
-    # collection = mydb["Events"]
-    # collection.delete_many({})
-    # collection.insert_many(events)
 
 
 if __name__ == '__main__':

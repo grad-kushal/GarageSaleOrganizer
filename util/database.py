@@ -69,7 +69,8 @@ def get_document_by_id(mydb, collection_name, document_id):
     return document
 
 
-def get_documents(mydb, collection_name=None, updated_year=None, category=None, rating=None, rating_comparison=None, tags=None, protocols=None, apis=None):
+def get_documents(mydb, collection_name=None, updated_year=None, category=None, rating=None, rating_comparison=None,
+                  tags=None, protocols=None, apis=None):
     """
     Get the documents from the database
     :param apis: apis
@@ -103,10 +104,10 @@ def get_documents(mydb, collection_name=None, updated_year=None, category=None, 
             query['rating'] = {'$eq': rating}
     if tags and tags != 'all':
         tags = [tag.strip() for tag in tags]
-        sub_query = {'$in': tags}                   # $in is used to match any of the tag values in the array
+        sub_query = {'$in': tags}  # $in is used to match any of the tag values in the array
         query['tags'] = sub_query
     if apis and apis != 'all' and collection_name == 'mashups':
-        sub_query = {'$all': apis}                  # $all is used to match all the api values in the array
+        sub_query = {'$all': apis}  # $all is used to match all the api values in the array
         query['apis.name'] = sub_query
     if apis and apis != 'all' and collection_name == 'apis':
         sub_query = {'$in': apis}
@@ -252,3 +253,43 @@ def add_event_to_user(mydb, user_id, insert_id, event_name):
     update = {'$push': {'events': event}}
     result = collection.update_one(query, update)
     return result
+
+
+def get_documents_by_location_and_date(mydb, collection_name, lng, lat, radius, start_of_day, end_of_day):
+    """
+    Get the documents from the database by location and date
+    :param end_of_day:
+    :param start_of_day:
+    :param mydb: database object
+    :param collection_name: collection name
+    :param lng: longitude
+    :param lat: latitude
+    :param radius: radius in meters
+    :return: the documents near the location and date
+    """
+    print("Query parameters: ", collection_name, lng, lat, radius, start_of_day, end_of_day)
+    pipeline = [
+        {
+            '$geoNear': {
+                'near': {
+                    'type': 'Point',
+                    'coordinates': [lng, lat]
+                },
+                'distanceField': 'distance',
+                'maxDistance': radius,
+                'spherical': True
+            }
+        },
+        {
+            '$match': {
+                '$and': [
+                    {'date': {'$gte': start_of_day}},
+                    {'date': {'$lte': end_of_day}}
+                ]
+            }
+        }
+    ]
+    # Get the documents
+    documents = execute_aggregation(mydb, collection_name, pipeline)
+    # Return the documents
+    return documents
