@@ -24,15 +24,15 @@ The Garage Sale Organizer project aims to simplify the process of finding and at
 - URL: `/event/<event_id>`
 - Description: Each garage sale event has a dedicated details page. Users can access this page by clicking "View Details" from the search results. It displays a wide event picture, event name, date, location, and event description.
 
-### User Authentication (Upcoming)
+### User Authentication
 - URLs: `/login`, `/register`, `/logout`
 - Description: User authentication will be implemented in the next milestone. Users will be able to register, log in, and log out to access advanced features such as marking events as favorites, leaving reviews, and creating their own events.
 
-### User Profile (Upcoming)
-- URL: `/profile/<user_id>`
+### User Profile
+- URL: `/profile/`
 - Description: Users will have individual profiles that display their information, favorite events, and activity within the community.
 
-### Create Event (Upcoming)
+### Create Event
 - URL: `/create_event`
 - Description: Users will be able to create and manage their garage sale events. This page will allow event organizers to provide event details and images.
 
