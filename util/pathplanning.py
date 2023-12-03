@@ -75,11 +75,12 @@ def solve_tsp(matrix, dimension):
     :param matrix: the distance matrix
     :return: the solution
     """
+    print("Solver Dimension: ", dimension)
     routes = []
     size = len(matrix)
     # for i in range(size):
 
-    manager = pywrapcp.RoutingIndexManager(size, 1, 0)
+    manager = pywrapcp.RoutingIndexManager(size, 1, [0], [0])
     routing = pywrapcp.RoutingModel(manager)
 
     def distance_callback(from_index, to_index):
@@ -99,26 +100,42 @@ def solve_tsp(matrix, dimension):
         dimension_name,
     )
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
-    distance_dimension.SetGlobalSpanCostCoefficient(100)
+    distance_dimension.SetGlobalSpanCostCoefficient(10000)
 
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.GLOBAL_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
-        routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
+        routing_enums_pb2.LocalSearchMetaheuristic.SIMULATED_ANNEALING)
     search_parameters.time_limit.seconds = 10
-    search_parameters.log_search = True
+    search_parameters.log_search = False
 
     solution = routing.SolveWithParameters(search_parameters)
     if solution:
         route = []
+        route_distances = []
+        max_route_distance = 0
+        total_distance = 0  # Track the total distance
         for vehicle_id in range(1):
+            print("Objective: ", solution.ObjectiveValue())
             index = routing.Start(vehicle_id)
+            route_distance = 0
             while not routing.IsEnd(index):
                 node = manager.IndexToNode(index)
                 route.append(node)
-                index = solution.Value(routing.NextVar(index))
-        routes.append(route)
+                next_index = solution.Value(routing.NextVar(index))
+                print("Index: ", index)
+                print("Next index: ", next_index)
+                arc_cost = routing.GetArcCostForVehicle(index, next_index, vehicle_id)
+                route_distance += arc_cost
+                print(f"Arc Cost: {arc_cost}{'m' if dimension == 'Distance' else 's'}")
+                print(matrix[node][manager.IndexToNode(next_index)])
+                print(f"Cumulative Cost: {route_distance}{'m' if dimension == 'Distance' else 's'}")
+                index = next_index
+            route.append(manager.IndexToNode(index))
+            route_distances.append(route_distance)
+            print(f"Route cost: {route_distance}{'m' if dimension == 'Distance' else 's'}")
+            routes.append(route)
     else:
         # print('No solution found.')
         routes.append([])

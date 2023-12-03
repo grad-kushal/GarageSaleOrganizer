@@ -239,20 +239,20 @@ def itinerary():
     # print(dist_preferred_routes)
     # print(dur_preferred_routes)
 
-    for event in events:
-        print(event['name'])
+    # for event in events:
+    #     print(event['name'])
 
     # Generate event names and locations for the preferred routes
     # print("Events: ", events)
     for route in dist_preferred_routes:
         print("Route: ", route)
-        for event in route:
-            print("events[event]['_id']: ", events[event]['_id'])
-            print("Event: ", id_to_name_map[str(events[event]['_id'])])
+        # for event in route:
+        #     # print("events[event]['_id']: ", events[event]['_id'])
+        #     print("Event: ", id_to_name_map[str(events[event]['_id'])])
     for route in dur_preferred_routes:
         print("Route: ", route)
-        for event in route:
-            print("Event: ", id_to_name_map[str(events[event]['_id'])])
+        # for event in route:
+        #     print("Event: ", id_to_name_map[str(events[event]['_id'])])
 
     dist_preferred_routes_with_names_and_locations = []
     dur_preferred_routes_with_names_and_locations = []
@@ -543,4 +543,4 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host="0.0.0.0", port=5000)
